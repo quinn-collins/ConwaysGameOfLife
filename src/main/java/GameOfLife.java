@@ -9,36 +9,36 @@ public class GameOfLife {
 	public static void main(String[] args) {
 
 		// decide on dimensions of the game
-		int vertical = 6;
-		int horizontal = 8;
+		int row = 6;
+		int column = 8;
 
 		// create the game grid
-		boolean[][] gameGrid = new boolean[vertical][horizontal];
+		boolean[][] gameGrid = new boolean[row][column];
 
-		gameGrid[0][7] = true;
+		gameGrid[0][6] = true;
 		gameGrid[1][0] = true;
 		gameGrid[1][1] = true;
 		gameGrid[1][2] = true;
-		gameGrid[1][7] = true;
-		gameGrid[2][7] = true;
+		gameGrid[1][6] = true;
+		gameGrid[2][6] = true;
 		gameGrid[4][3] = true;
 		gameGrid[4][4] = true;
 		gameGrid[5][3] = true;
 		gameGrid[5][4] = true;
 
 		for (int i = 0; i < 3; i++) {
-			printOutCurrentGameGrid(gameGrid, vertical, horizontal);
+			printOutCurrentGameGrid(gameGrid, row, column);
 
-			gameGrid = moveToNextGeneration(gameGrid, vertical, horizontal);
+			gameGrid = moveToNextGeneration(gameGrid, row, column);
 			System.out.println();
 		}
 
 	}
 
 	// print game grid
-	public static void printOutCurrentGameGrid(boolean[][] gameGrid, int vertical, int horizontal) {
-		for (int i = 0; i < vertical; i++) {
-			for (int j = 0; j < horizontal; j++) {
+	public static void printOutCurrentGameGrid(boolean[][] gameGrid, int row, int column) {
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
 				if (gameGrid[i][j]) {
 					System.out.print("*");
 				} else {
@@ -74,7 +74,7 @@ public class GameOfLife {
 		if (i < gameGrid.length - 1 && gameGrid[i + 1][j]) {
 			count++;
 		}
-		if (i < gameGrid.length - 1 && j < gameGrid.length - 1 && gameGrid[i + 1][j + 1]) {
+		if (i < gameGrid.length - 1 && j < gameGrid[0].length - 1 && gameGrid[i + 1][j + 1]) {
 			count++;
 		}
 		return count;
@@ -82,10 +82,10 @@ public class GameOfLife {
 
 	// let logic decide which cells die and which live to move to next
 	// generation
-	public static boolean[][] moveToNextGeneration(boolean[][] gameGrid, int vertical, int horizontal) {
-		boolean[][] nextGameGridFrame = new boolean[vertical][horizontal];
-		for (int i = 0; i < vertical; i++) {
-			for (int j = 0; j < horizontal; j++) {
+	public static boolean[][] moveToNextGeneration(boolean[][] gameGrid, int row, int column) {
+		boolean[][] nextGameGridFrame = new boolean[row][column];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
 
 				int count = getCountOfLiveCellsAroundEachCell(gameGrid, i, j);
 
