@@ -1,110 +1,127 @@
-/*
- * Author:   Quinn Collins
- * Date:     Friday, July 28th, 2017
- * Purpose:  Fuse - Conway's Game of Life kata
- *  
- */
-public class GameOfLife {
+import java.util.ArrayList;
+import java.util.List;
 
-	public static void main(String[] args) {
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
-		// decide on dimensions of the game
-		int row = 6;
-		int column = 8;
+public class GameOfLife extends Application {
 
-		// create the game grid
-		boolean[][] gameGrid = new boolean[row][column];
+	private static final int TILE_SIZE = 80;
+	private static final int W = 800;
+	private static final int H = 600;
 
-		gameGrid[0][6] = true;
-		gameGrid[1][0] = true;
-		gameGrid[1][1] = true;
-		gameGrid[1][2] = true;
-		gameGrid[1][6] = true;
-		gameGrid[2][6] = true;
-		gameGrid[4][3] = true;
-		gameGrid[4][4] = true;
-		gameGrid[5][3] = true;
-		gameGrid[5][4] = true;
+	private static final int X_TILES = W / TILE_SIZE;
+	private static final int Y_TILES = H / TILE_SIZE;
 
-		for (int i = 0; i < 3; i++) {
-			printOutCurrentGameGrid(gameGrid, row, column);
+	private Cell[][] grid = new Cell[X_TILES][Y_TILES];
+	private Cell[][] nextFrame = new Cell[X_TILES][Y_TILES];
+	private Scene scene;
 
-			gameGrid = moveToNextGeneration(gameGrid, row, column);
-			System.out.println();
+	public Parent createContent() {
+		
+		Button start = new Button("Start");
+		start.setOnAction(e -> {
+			start();
+		});
+		Pane root = new Pane();
+		root.setPrefSize(W, H);
+
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+				Cell cell = new Cell(x, y);
+				grid[x][y] = cell;
+				root.getChildren().add(cell);
+			}
 		}
 
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+			}
+		}
+		root.getChildren().addAll(start);
+		return root;
+	}
+	
+
+	private void start() {
+		
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+				nextFrame[x][y] = grid[x][y];
+				
+				
+				int count = getCountOfLiveCells(grid[x][y]);
+				System.out.println("count: " + count + "  x: " + x + "  y: " + y);
+
+				
+				if (grid[x][y].isOpen() && count < 2) {
+					nextFrame[x][y].close();
+					
+				}
+				if (grid[x][y].isOpen() && count > 3) {
+					nextFrame[x][y].close();
+					
+				}
+				if (grid[x][y].isOpen() && count == 2 || count == 3) {
+					nextFrame[x][y].open();
+					
+				}
+				if (!grid[x][y].isOpen() && count == 3) {
+					nextFrame[x][y].open();
+					
+				}
+
+			}
+		}
+		for (int y = 0; y < Y_TILES; y++) {
+			for (int x = 0; x < X_TILES; x++) {
+				grid[x][y] = nextFrame[x][y];
+			}
+		}
+		
+		scene = new Scene(createContent());
+		
+	}
+	
+
+	public static int getTileSize() {
+		return TILE_SIZE;
 	}
 
-	// print game grid
-	public static void printOutCurrentGameGrid(boolean[][] gameGrid, int row, int column) {
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < column; j++) {
-				if (gameGrid[i][j]) {
-					System.out.print("*");
-				} else {
-					System.out.print("-");
+	public int getCountOfLiveCells(Cell cell) {
+
+		int[] points = new int[] { -1, -1, -1, 0, -1, 1, 0, -1, 0, 1, 1, -1, 1, 0, 1, 1 };
+		int count = 0;
+		for (int i = 0; i < points.length; i++) {
+			int dx = points[i];
+			int dy = points[++i];
+
+			int newX = cell.getX() + dx;
+			int newY = cell.getY() + dy;
+
+			if (newX >= 0 && newX < X_TILES && newY >= 0 && newY < Y_TILES) {
+				if(grid[newX][newY].isOpen()) {
+					count++;
 				}
 			}
-			System.out.println();
 		}
-	}
 
-	// get a count for number of live cells around each cell
-	public static int getCountOfLiveCellsAroundEachCell(boolean[][] gameGrid, int i, int j) {
-		int count = 0;
-
-		if (i > 0 && j > 0 && gameGrid[i - 1][j - 1]) {
-			count++;
-		}
-		if (i > 0 && gameGrid[i - 1][j]) {
-			count++;
-		}
-		if (j < gameGrid[0].length - 1 && i > 0 && gameGrid[i - 1][j + 1]) {
-			count++;
-		}
-		if (j > 0 && gameGrid[i][j - 1]) {
-			count++;
-		}
-		if (j < gameGrid[0].length - 1 && gameGrid[i][j + 1]) {
-			count++;
-		}
-		if (i < gameGrid.length - 1 && j > 0 && gameGrid[i + 1][j - 1]) {
-			count++;
-		}
-		if (i < gameGrid.length - 1 && gameGrid[i + 1][j]) {
-			count++;
-		}
-		if (i < gameGrid.length - 1 && j < gameGrid[0].length - 1 && gameGrid[i + 1][j + 1]) {
-			count++;
-		}
 		return count;
 	}
 
-	// let logic decide which cells die and which live to move to next
-	// generation
-	public static boolean[][] moveToNextGeneration(boolean[][] gameGrid, int row, int column) {
-		boolean[][] nextGameGridFrame = new boolean[row][column];
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < column; j++) {
+	@Override
+	public void start(Stage stage) throws Exception {
+		scene = new Scene(createContent());
 
-				int count = getCountOfLiveCellsAroundEachCell(gameGrid, i, j);
-
-				if (gameGrid[i][j] && count < 2) {
-					nextGameGridFrame[i][j] = false;
-				}
-				if (gameGrid[i][j] && count > 3) {
-					nextGameGridFrame[i][j] = false;
-				}
-				if (gameGrid[i][j] && count == 2 || count == 3) {
-					nextGameGridFrame[i][j] = true;
-				}
-				if (!gameGrid[i][j] && count == 3) {
-					nextGameGridFrame[i][j] = true;
-				}
-
-			}
-		}
-		return nextGameGridFrame;
+		stage.setScene(scene);
+		stage.show();
 	}
 
+	public static void main(String[] args) {
+		launch(args);
+	}
 }
