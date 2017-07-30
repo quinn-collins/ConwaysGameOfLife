@@ -34,6 +34,8 @@ public class Cell extends StackPane {
             setTranslateY(y * GameOfLife.getTileSize());
 
             setOnMouseClicked(e -> open());
+            
+            
         }
 
         public void open() {
