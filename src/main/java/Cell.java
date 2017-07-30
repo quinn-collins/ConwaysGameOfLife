@@ -22,9 +22,8 @@ public class Cell extends StackPane {
             this.x = x;
             this.y = y;
             
-
-            border.setStroke(Color.RED);
-            border.setFill(Color.RED);
+            border.setStroke(Color.LIGHTGREY);
+            border.setFill(Color.BLACK);
 
             
          
@@ -38,16 +37,8 @@ public class Cell extends StackPane {
         }
 
         public void open() {
-            
-
-//            if (isAlive) {
-//               test2.getScene().setRoot(test2.createContent());
-//               return;
-//            }
-
-            isOpen = true;
-            border.setFill(Color.BLUE);
-
+        	isOpen = true;
+        	border.setFill(Color.WHITE);
         }
 
 		public int getX() {
@@ -68,7 +59,7 @@ public class Cell extends StackPane {
 
 		public void close() {
 			isOpen = false;
-			border.setFill(Color.RED);
+			border.setFill(Color.BLACK);
 			
 		}
 }
