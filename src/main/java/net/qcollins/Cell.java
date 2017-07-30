@@ -1,9 +1,11 @@
+package net.qcollins;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+@SuppressWarnings("restriction")
 public class Cell extends StackPane {
         private int x, y;
         
@@ -19,6 +21,7 @@ public class Cell extends StackPane {
 		
 
         public Cell(int x, int y) {
+        	
             this.x = x;
             this.y = y;
             
