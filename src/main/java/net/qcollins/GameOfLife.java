@@ -21,18 +21,21 @@ public class GameOfLife extends Application {
 	private Cell[][] nextFrame;
 	private Scene scene;
 	private Pane root;
-	
+
 	private boolean gliderGun;
 
 	public static void main(String[] args) {
-		launch(args); //Launches Application class
+		launch(args); // Launches Application class
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception { 	// Application class gives us a stage when it calls start method
-		scene = new Scene(createContent()); 			// scene is created with a pane layout
-		stage.setScene(scene); 							// we give scene to stage
-		stage.show(); 									// we show the stage/window
+	public void start(Stage stage) throws Exception { // Application class gives
+														// us a stage when it
+														// calls start method
+		scene = new Scene(createContent()); // scene is created with a pane
+											// layout
+		stage.setScene(scene); // we give scene to stage
+		stage.show(); // we show the stage/window
 	}
 
 	public Parent createContent() { // Gives us a layout with our grid
@@ -61,19 +64,6 @@ public class GameOfLife extends Application {
 			root.getChildren().add(createButtons());
 		});
 
-		 Button startCycling = new Button("Start"); // Starts game on infinite
-		 startCycling.setOnAction(e -> {
-			 root.getChildren().clear();
-			 startCycling();
-			 root.getChildren().add(createButtons());
-		 });
-		
-		 Button stopCycling = new Button("Stop"); // Ends the infinite loop
-		 stopCycling.setOnAction(e -> {
-			 root.getChildren().clear();
-			 stopCycling();
-			 root.getChildren().add(createButtons());
-		 });
 		Button clear = new Button("Clear"); // Clears the game board
 		clear.setOnAction(e -> {
 			root.getChildren().clear();
@@ -95,8 +85,6 @@ public class GameOfLife extends Application {
 			root.getChildren().add(createButtons());
 		});
 
-		 hbox.getChildren().add(startCycling);
-		 hbox.getChildren().add(stopCycling);
 		hbox.getChildren().add(next);
 		hbox.getChildren().add(clear);
 		hbox.getChildren().add(seed);
@@ -106,13 +94,30 @@ public class GameOfLife extends Application {
 	}
 
 	private void addEachCellToRoot(Cell cell) { // when changing game board this
-												// method takes each cell and adds it to root
-		root.getChildren().addAll(cell);
+		if (root != null) {						// method takes each cell and
+			root.getChildren().addAll(cell);	// adds it to root
+		}
 	}
 
 	// LOGICAL UNITS
 	public static int getTileSize() {
 		return tile_size;
+	}
+
+	public int getX_TILES() {
+		return X_TILES;
+	}
+
+	public int getY_TILES() {
+		return Y_TILES;
+	}
+
+	public void setGrid(Cell[][] grid) {
+		this.grid = grid;
+	}
+
+	public void setNextFrame(Cell[][] nextFrame) {
+		this.nextFrame = nextFrame;
 	}
 
 	public int getCountOfLiveCells(Cell cell) { // checks the neighboring cells for boolean value
@@ -159,14 +164,6 @@ public class GameOfLife extends Application {
 			}
 		}
 	}
-
-	 public void startCycling() {
-		next();
-	}
-
-	 public void stopCycling() {
-	 // Turn some boolean off
-	 }
 
 	public void next() {
 		nextFrame = new Cell[X_TILES][Y_TILES];
@@ -216,14 +213,14 @@ public class GameOfLife extends Application {
 	}
 
 	public void seed() {
-		
+
 		nextFrame = new Cell[X_TILES][Y_TILES];
 		for (int y = 0; y < Y_TILES; y++) {
 			for (int x = 0; x < X_TILES; x++) {
 				nextFrame[x][y] = new Cell(x, y);
 			}
 		}
-		if(gliderGun) {
+		if (gliderGun) {
 			// glider gun
 			gliderGun = false;
 			nextFrame[0][6].open();
@@ -263,90 +260,89 @@ public class GameOfLife extends Application {
 			nextFrame[34][5].open();
 			nextFrame[35][4].open();
 			nextFrame[35][5].open();
-		}
-		else {
-		 // Pulsar (period 3)
+		} else {
+			// Pulsar (period 3)
 			gliderGun = true;
-		 nextFrame[5][2].open();
-		 nextFrame[6][2].open();
-		 nextFrame[7][2].open();
-		 nextFrame[11][2].open();
-		 nextFrame[12][2].open();
-		 nextFrame[13][2].open();
-		 nextFrame[3][4].open();
-		 nextFrame[8][4].open();
-		 nextFrame[10][4].open();
-		 nextFrame[15][4].open();
-		 nextFrame[3][5].open();
-		 nextFrame[8][5].open();
-		 nextFrame[10][5].open();
-		 nextFrame[15][5].open();
-		 nextFrame[3][6].open();
-		 nextFrame[8][6].open();
-		 nextFrame[10][6].open();
-		 nextFrame[15][6].open();
-		 nextFrame[5][7].open();
-		 nextFrame[6][7].open();
-		 nextFrame[7][7].open();
-		 nextFrame[11][7].open();
-		 nextFrame[12][7].open();
-		 nextFrame[13][7].open();
-		 nextFrame[5][9].open();
-		 nextFrame[6][9].open();
-		 nextFrame[7][9].open();
-		 nextFrame[11][9].open();
-		 nextFrame[12][9].open();
-		 nextFrame[13][9].open();
-		 nextFrame[3][10].open();
-		 nextFrame[8][10].open();
-		 nextFrame[10][10].open();
-		 nextFrame[15][10].open();
-		 nextFrame[3][11].open();
-		 nextFrame[8][11].open();
-		 nextFrame[10][11].open();
-		 nextFrame[15][11].open();
-		 nextFrame[3][12].open();
-		 nextFrame[8][12].open();
-		 nextFrame[10][12].open();
-		 nextFrame[15][12].open();
-		 nextFrame[5][14].open();
-		 nextFrame[6][14].open();
-		 nextFrame[7][14].open();
-		 nextFrame[11][14].open();
-		 nextFrame[12][14].open();
-		 nextFrame[13][14].open();
-		
-		 // Pentadecathlon (period 15)
-		 nextFrame[23][8].open();
-		 nextFrame[24][8].open();
-		 nextFrame[26][8].open();
-		 nextFrame[27][8].open();
-		 nextFrame[28][8].open();
-		 nextFrame[29][8].open();
-		 nextFrame[31][8].open();
-		 nextFrame[32][8].open();
-		 nextFrame[25][7].open();
-		 nextFrame[25][9].open();
-		 nextFrame[30][7].open();
-		 nextFrame[30][9].open();
-		
-		 // Lightweight spaceship
-		 nextFrame[36][20].open();
-		 nextFrame[39][20].open();
-		 nextFrame[35][21].open();
-		 nextFrame[35][22].open();
-		 nextFrame[39][22].open();
-		 nextFrame[35][23].open();
-		 nextFrame[36][23].open();
-		 nextFrame[37][23].open();
-		 nextFrame[38][23].open();
-		
-		 // glider
-		 nextFrame[15][17].open();
-		 nextFrame[16][18].open();
-		 nextFrame[14][19].open();
-		 nextFrame[15][19].open();
-		 nextFrame[16][19].open();
+			nextFrame[5][2].open();
+			nextFrame[6][2].open();
+			nextFrame[7][2].open();
+			nextFrame[11][2].open();
+			nextFrame[12][2].open();
+			nextFrame[13][2].open();
+			nextFrame[3][4].open();
+			nextFrame[8][4].open();
+			nextFrame[10][4].open();
+			nextFrame[15][4].open();
+			nextFrame[3][5].open();
+			nextFrame[8][5].open();
+			nextFrame[10][5].open();
+			nextFrame[15][5].open();
+			nextFrame[3][6].open();
+			nextFrame[8][6].open();
+			nextFrame[10][6].open();
+			nextFrame[15][6].open();
+			nextFrame[5][7].open();
+			nextFrame[6][7].open();
+			nextFrame[7][7].open();
+			nextFrame[11][7].open();
+			nextFrame[12][7].open();
+			nextFrame[13][7].open();
+			nextFrame[5][9].open();
+			nextFrame[6][9].open();
+			nextFrame[7][9].open();
+			nextFrame[11][9].open();
+			nextFrame[12][9].open();
+			nextFrame[13][9].open();
+			nextFrame[3][10].open();
+			nextFrame[8][10].open();
+			nextFrame[10][10].open();
+			nextFrame[15][10].open();
+			nextFrame[3][11].open();
+			nextFrame[8][11].open();
+			nextFrame[10][11].open();
+			nextFrame[15][11].open();
+			nextFrame[3][12].open();
+			nextFrame[8][12].open();
+			nextFrame[10][12].open();
+			nextFrame[15][12].open();
+			nextFrame[5][14].open();
+			nextFrame[6][14].open();
+			nextFrame[7][14].open();
+			nextFrame[11][14].open();
+			nextFrame[12][14].open();
+			nextFrame[13][14].open();
+
+			// Pentadecathlon (period 15)
+			nextFrame[23][8].open();
+			nextFrame[24][8].open();
+			nextFrame[26][8].open();
+			nextFrame[27][8].open();
+			nextFrame[28][8].open();
+			nextFrame[29][8].open();
+			nextFrame[31][8].open();
+			nextFrame[32][8].open();
+			nextFrame[25][7].open();
+			nextFrame[25][9].open();
+			nextFrame[30][7].open();
+			nextFrame[30][9].open();
+
+			// Lightweight spaceship
+			nextFrame[36][20].open();
+			nextFrame[39][20].open();
+			nextFrame[35][21].open();
+			nextFrame[35][22].open();
+			nextFrame[39][22].open();
+			nextFrame[35][23].open();
+			nextFrame[36][23].open();
+			nextFrame[37][23].open();
+			nextFrame[38][23].open();
+
+			// glider
+			nextFrame[15][17].open();
+			nextFrame[16][18].open();
+			nextFrame[14][19].open();
+			nextFrame[15][19].open();
+			nextFrame[16][19].open();
 		}
 
 		for (int y = 0; y < Y_TILES; y++) {
